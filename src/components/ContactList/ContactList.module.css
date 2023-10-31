@@ -1,0 +1,8 @@
+.info {
+  margin-left: 10px;
+  margin-right: 20px;
+}
+.contact {
+  display: flex;
+  padding: 10px;
+}
