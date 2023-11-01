@@ -14,20 +14,79 @@ const contactData = [
 export default function App(params) {
   const [contactData, setContactData] = useState([]);
 
+  // componentDidMount() {
+  //   const stringifiedContacts = localStorage.getItem('contacts');
+  //   const parsedContacts = JSON.parse(stringifiedContacts) ?? contactData;
+  //   this.setState({ contacts: parsedContacts });
+  // }
+
+  // componentDidUpdate(_, prevState) {
+  //   if (prevState.contacts !== this.state.contacts) {
+  //     const stringifiedContacts = JSON.stringify(this.state.contacts);
+  //     localStorage.setItem('contacts', stringifiedContacts);
+  //   }
+  // }
 
   const handleDeleteContact = contactId => {
-    setContactData(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    // setContactData(prevState => ({
+    //   contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    // }));
+    let newContact = [...contactData].filter(
+      item => item.contactId !== contactId
+    );
+    setContactData(newContact);
+  };
+
+  const handleAddContact = nameData => {
+    const hasDuplicate = contactData.find(
+      contact => contact.name === nameData.name
+    );
+    if (hasDuplicate) {
+      alert(`${nameData.name} is already in contacts`);
+      return;
+    }
+
+    const finalContact = {
+      ...nameData,
+      id: nanoid(),
+    };
+
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, finalContact],
     }));
   };
+
+  const handleFilterChange = e => {
+    setContactData(e.currentTarget.value);
+  };
+
+  const getFilteredContacts = () => {
+    // const [filter, setFilter] = useState('');
+    const [contacts, setContacts] = useState('');
+
+    const allLetterFilter = setContacts.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(allLetterFilter)
+    );
+  };
+
+  // getFilteredContacts = () => {
+  //     const { filter, contacts } = this.state;
+  //     const allLetterFilter = filter.toLowerCase();
+  //     return contacts.filter(contact =>
+  //       contact.name.toLowerCase().includes(allLetterFilter)
+  //     );
+  //   };
+
+  const filteredContacts = getFilteredContacts();
 
   return (
     <div>
       <section>
-        <ContactForm handleAddContact={this.handleAddContact} />
+        <ContactForm handleAddContact={handleAddContact} />
       </section>
       <section>
-        <Filter value={this.state.filter} onChange={this.handleFilterChange} />
+        <Filter value={filter} onChange={handleFilterChange} />
       </section>
       {filteredContacts.map(contact => (
         <ContactList
@@ -35,7 +94,7 @@ export default function App(params) {
           id={contact.id}
           name={contact.name}
           number={contact.number}
-          handleDeleteContact={this.handleDeleteContact}
+          handleDeleteContact={handleDeleteContact}
         />
       ))}
     </div>
