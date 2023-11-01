@@ -19,13 +19,10 @@ export default function App() {
     return parsedContacts;
   });
 
-  const handleDeleteContact = contactId => {
-    // setContactData(prevState => ({
-    //   contacts: prevState.contacts.filter(contact => contact.id !== contactId),
-    // }));
-    let newContact = [...contacts].filter(item => item.contactId !== contactId);
-    setContactData(newContact);
-  };
+  // const handleDeleteContact = contactId => {
+  //   let newContact = [...contacts].filter(item => item.contactId !== contactId);
+  //   setContactData(newContact);
+  // };
 
   const handleAddContact = nameData => {
     const hasDuplicate = contacts.find(
