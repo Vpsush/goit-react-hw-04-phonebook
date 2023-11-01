@@ -68,7 +68,7 @@ export default function App() {
   // //     );
   // //   };
 
-  const filteredContacts = getFilteredContacts();
+  // const filteredContacts = getFilteredContacts();
 
   return (
     <div>
