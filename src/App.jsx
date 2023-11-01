@@ -1,4 +1,4 @@
-import { ContactForm } from './components/ContactForm/ContactForm';
+import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
 import { nanoid } from 'nanoid';
 import Filter from 'components/Filter/Filter';
@@ -11,34 +11,24 @@ const contactData = [
   { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
 ];
 
-export default function App(params) {
-  const [contactData, setContactData] = useState([]);
+export default function App() {
+  const [contacts, setContactData] = useState(() => {
+    const stringifiedContacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(stringifiedContacts) ?? contactData;
 
-  // componentDidMount() {
-  //   const stringifiedContacts = localStorage.getItem('contacts');
-  //   const parsedContacts = JSON.parse(stringifiedContacts) ?? contactData;
-  //   this.setState({ contacts: parsedContacts });
-  // }
-
-  // componentDidUpdate(_, prevState) {
-  //   if (prevState.contacts !== this.state.contacts) {
-  //     const stringifiedContacts = JSON.stringify(this.state.contacts);
-  //     localStorage.setItem('contacts', stringifiedContacts);
-  //   }
-  // }
+    return parsedContacts;
+  });
 
   const handleDeleteContact = contactId => {
     // setContactData(prevState => ({
     //   contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     // }));
-    let newContact = [...contactData].filter(
-      item => item.contactId !== contactId
-    );
+    let newContact = [...contacts].filter(item => item.contactId !== contactId);
     setContactData(newContact);
   };
 
   const handleAddContact = nameData => {
-    const hasDuplicate = contactData.find(
+    const hasDuplicate = contacts.find(
       contact => contact.name === nameData.name
     );
     if (hasDuplicate) {
@@ -60,23 +50,23 @@ export default function App(params) {
     setContactData(e.currentTarget.value);
   };
 
-  const getFilteredContacts = () => {
-    // const [filter, setFilter] = useState('');
-    const [contacts, setContacts] = useState('');
+  // const getFilteredContacts = () => {
+  //   // const [filter, setFilter] = useState('');
+  //   // const [contacts, setContacts] = useState('');
 
-    const allLetterFilter = setContacts.toLowerCase();
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(allLetterFilter)
-    );
-  };
+  //   const allLetterFilter = contacts.toLowerCase();
+  //   return contacts.filter(contact =>
+  //     contact.toLowerCase().includes(allLetterFilter)
+  //   );
+  // };
 
-  // getFilteredContacts = () => {
-  //     const { filter, contacts } = this.state;
-  //     const allLetterFilter = filter.toLowerCase();
-  //     return contacts.filter(contact =>
-  //       contact.name.toLowerCase().includes(allLetterFilter)
-  //     );
-  //   };
+  // // getFilteredContacts = () => {
+  // //     const { filter, contacts } = this.state;
+  // //     const allLetterFilter = filter.toLowerCase();
+  // //     return contacts.filter(contact =>
+  // //       contact.name.toLowerCase().includes(allLetterFilter)
+  // //     );
+  // //   };
 
   const filteredContacts = getFilteredContacts();
 
@@ -86,9 +76,12 @@ export default function App(params) {
         <ContactForm handleAddContact={handleAddContact} />
       </section>
       <section>
-        <Filter value={filter} onChange={handleFilterChange} />
+        <Filter
+          // value={filter}
+          onChange={handleFilterChange}
+        />
       </section>
-      {filteredContacts.map(contact => (
+      {/* {filteredContacts.map(contact => (
         <ContactList
           key={contact.id}
           id={contact.id}
@@ -96,7 +89,7 @@ export default function App(params) {
           number={contact.number}
           handleDeleteContact={handleDeleteContact}
         />
-      ))}
+      ))} */}
     </div>
   );
 }
