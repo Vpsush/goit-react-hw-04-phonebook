@@ -12,6 +12,7 @@ const contactData = [
 ];
 
 export default function App() {
+  const [filter, setFilter] = useState('');
   const [contacts, setContactData] = useState(() => {
     const stringifiedContacts = localStorage.getItem('contacts');
     const parsedContacts = JSON.parse(stringifiedContacts) ?? contactData;
@@ -20,8 +21,10 @@ export default function App() {
   });
 
   const handleDeleteContact = contactId => {
-    let newContact = [contacts].filter(item => item.contactId !== contactId);
-    setContactData(newContact);
+    // let newContact = contacts.filter(item => item.contactId !== contactId);
+    setContactData(contact =>
+      contact.filter(item => item.contactId !== contactId)
+    );
   };
 
   const handleAddContact = nameData => {
@@ -38,32 +41,14 @@ export default function App() {
       id: nanoid(),
     };
 
-    this.setState(prevState => ({
+    setContactData(prevState => ({
       contacts: [...prevState.contacts, finalContact],
     }));
   };
 
-  const handleFilterChange = e => {
-    setContactData(e.currentTarget.value);
+  const getFilteredContacts = e => {
+    setFilter(e.currentTarget.value);
   };
-
-  const getFilteredContacts = () => {
-    const [filter, setFilter] = useState('');
-    const [contacts, setContacts] = useState('');
-
-    // const allLetterFilter = contacts.toLowerCase();
-    return contacts.filter(contact => contact.toLowerCase().includes(filter));
-  };
-
-  // // getFilteredContacts = () => {
-  // //     const { filter, contacts } = this.state;
-  // //     const allLetterFilter = filter.toLowerCase();
-  // //     return contacts.filter(contact =>
-  // //       contact.name.toLowerCase().includes(allLetterFilter)
-  // //     );
-  // //   };
-
-  const filteredContacts = getFilteredContacts();
 
   return (
     <div>
@@ -71,9 +56,9 @@ export default function App() {
         <ContactForm handleAddContact={handleAddContact} />
       </section>
       <section>
-        <Filter value={filter} onChange={handleFilterChange} />
+        <Filter value={filter} onChange={getFilteredContacts} />
       </section>
-      {filteredContacts.map(contact => (
+      {contacts.map(contact => (
         <ContactList
           key={contact.id}
           id={contact.id}
