@@ -21,7 +21,6 @@ export default function App() {
   });
 
   const handleDeleteContact = contactId => {
-    // let newContact = contacts.filter(item => item.contactId !== contactId);
     setContactData(contact =>
       contact.filter(item => item.contactId !== contactId)
     );
