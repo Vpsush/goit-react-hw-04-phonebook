@@ -1,5 +1,5 @@
 import ContactForm from './components/ContactForm/ContactForm';
-// import ContactList from './components/ContactList/ContactList';
+import ContactList from './components/ContactList/ContactList';
 import { nanoid } from 'nanoid';
 import Filter from 'components/Filter/Filter';
 import React, { useState } from 'react';
@@ -19,10 +19,10 @@ export default function App() {
     return parsedContacts;
   });
 
-  // const handleDeleteContact = contactId => {
-  //   let newContact = [...contacts].filter(item => item.contactId !== contactId);
-  //   setContactData(newContact);
-  // };
+  const handleDeleteContact = contactId => {
+    let newContact = [contacts].filter(item => item.contactId !== contactId);
+    setContactData(newContact);
+  };
 
   const handleAddContact = nameData => {
     const hasDuplicate = contacts.find(
@@ -47,15 +47,13 @@ export default function App() {
     setContactData(e.currentTarget.value);
   };
 
-  // const getFilteredContacts = () => {
-  //   // const [filter, setFilter] = useState('');
-  //   // const [contacts, setContacts] = useState('');
+  const getFilteredContacts = () => {
+    const [filter, setFilter] = useState('');
+    const [contacts, setContacts] = useState('');
 
-  //   const allLetterFilter = contacts.toLowerCase();
-  //   return contacts.filter(contact =>
-  //     contact.toLowerCase().includes(allLetterFilter)
-  //   );
-  // };
+    // const allLetterFilter = contacts.toLowerCase();
+    return contacts.filter(contact => contact.toLowerCase().includes(filter));
+  };
 
   // // getFilteredContacts = () => {
   // //     const { filter, contacts } = this.state;
@@ -65,7 +63,7 @@ export default function App() {
   // //     );
   // //   };
 
-  // const filteredContacts = getFilteredContacts();
+  const filteredContacts = getFilteredContacts();
 
   return (
     <div>
@@ -73,12 +71,9 @@ export default function App() {
         <ContactForm handleAddContact={handleAddContact} />
       </section>
       <section>
-        <Filter
-          // value={filter}
-          onChange={handleFilterChange}
-        />
+        <Filter value={filter} onChange={handleFilterChange} />
       </section>
-      {/* {filteredContacts.map(contact => (
+      {filteredContacts.map(contact => (
         <ContactList
           key={contact.id}
           id={contact.id}
@@ -86,7 +81,7 @@ export default function App() {
           number={contact.number}
           handleDeleteContact={handleDeleteContact}
         />
-      ))} */}
+      ))}
     </div>
   );
 }
