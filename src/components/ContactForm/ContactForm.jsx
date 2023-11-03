@@ -69,7 +69,7 @@
 import React, { useState } from 'react';
 import css from './ContactForm.module.css';
 
-export default function ContactForm(params) {
+export default function ContactForm({ handleAddContact }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -79,11 +79,13 @@ export default function ContactForm(params) {
 
   const handleInputChangeNu = e => {
     setNumber(e.target.value);
-    console.log(name);
   };
 
   const handleSubmit = e => {
     e.preventDefault();
+    handleAddContact({ name, number });
+    setName('');
+    setNumber('');
   };
 
   return (
@@ -99,7 +101,7 @@ export default function ContactForm(params) {
               onChange={handleInputChangeNa}
               required
               pattern={
-                "^[a-zA-Zа-яА-Я]+(([' \\-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+                "^[a-zA-Zа-яА-Я]+(([' \\-][a-zA-Zа-яА-Я ])?[a-zAZа-яА-Я]*)*$"
               }
               value={name}
             />
@@ -128,27 +130,3 @@ export default function ContactForm(params) {
     </div>
   );
 }
-
-// export default class Form extends Component {
-//   state = {
-//     name: '',
-//     number: '',
-//   };
-
-//   handleSubmit = e => {
-//     e.preventDefault();
-//     this.props.handleAddContact(this.state);
-//   };
-
-//   handleInputChange = e => {
-//     const value = e.target.value;
-//     const name = e.target.name;
-//     this.setState({
-//       [name]: value,
-//     });
-//   };
-
-//   render() {
-//
-//   }
-// }

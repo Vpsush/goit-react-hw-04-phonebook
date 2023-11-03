@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
 import { nanoid } from 'nanoid';
 import Filter from 'components/Filter/Filter';
-import React, { useState } from 'react';
 
 const contactData = [
   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -13,41 +13,41 @@ const contactData = [
 
 export default function App() {
   const [filter, setFilter] = useState('');
-  const [contacts, setContactData] = useState(() => {
+  const [contacts, setContacts] = useState(contactData);
+
+  useEffect(() => {
     const stringifiedContacts = localStorage.getItem('contacts');
     const parsedContacts = JSON.parse(stringifiedContacts) ?? contactData;
+    setContacts(parsedContacts);
+  }, []);
 
-    return parsedContacts;
-  });
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const handleDeleteContact = contactId => {
-    setContactData(contact =>
-      contact.filter(item => item.contactId !== contactId)
-    );
+    setContacts(contacts.filter(contact => contact.id !== contactId));
   };
 
-  const handleAddContact = nameData => {
-    const hasDuplicate = contacts.find(
-      contact => contact.name === nameData.name
-    );
+  const handleAddContact = ({ name, number }) => {
+    const hasDuplicate = contacts.find(contact => contact.name === name);
     if (hasDuplicate) {
-      alert(`${nameData.name} is already in contacts`);
+      alert(`${name} is already in contacts`);
       return;
     }
 
     const finalContact = {
-      ...nameData,
       id: nanoid(),
+      name,
+      number,
     };
 
-    setContactData(prevState => ({
-      contacts: [...prevState.contacts, finalContact],
-    }));
+    setContacts([...contacts, finalContact]);
   };
 
-  const getFilteredContacts = e => {
-    setFilter(e.currentTarget.value);
-  };
+  const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
   return (
     <div>
@@ -55,9 +55,9 @@ export default function App() {
         <ContactForm handleAddContact={handleAddContact} />
       </section>
       <section>
-        <Filter value={filter} onChange={getFilteredContacts} />
+        <Filter value={filter} onChange={e => setFilter(e.target.value)} />
       </section>
-      {contacts.map(contact => (
+      {filteredContacts.map(contact => (
         <ContactList
           key={contact.id}
           id={contact.id}
